@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hello</title>
+    <title>Dynamic Image and Words Display</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,70 +33,53 @@
     <div id="content"></div>
 
     <script>
-        const fs = require('fs');
-        const path = require('path');
-
-        // Directories for images, links, and texts
-        const imagesDir = 'https://github.com/einundzwanziger/riaato.github.io/tree/main/docs/images';
-        const linksDir = 'https://github.com/einundzwanziger/riaato.github.io/tree/main/docs/link';
-        const textsDir = 'https://github.com/einundzwanziger/riaato.github.io/tree/main/docs/text';
-
-        // Function to read file content
-        function readFileContent(filePath) {
+        async function fetchFileContent(url) {
             try {
-                return fs.readFileSync(filePath, 'utf8');
+                const response = await fetch(url);
+                const text = await response.text();
+                return text.trim();
             } catch (error) {
-                console.error(`Error reading file: ${filePath}`, error);
+                console.error(`Error fetching file: ${url}`, error);
                 return '';
             }
         }
 
-        // Function to extract and display 10 most used words
-        function getMostUsedWords(text) {
-            const wordCounts = {};
-            const words = text.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/);
-
-            words.forEach(word => {
-                if (word) {
-                    wordCounts[word] = (wordCounts[word] || 0) + 1;
-                }
-            });
-
-            const sortedWords = Object.entries(wordCounts).sort((a, b) => b[1] - a[1]);
-
-            const wordList = sortedWords.slice(0, 10);
-            return wordList.map(([word, count]) => `${word} (${count})`).join(', ');
-        }
-
-        // Function to generate content
-        function generateContent() {
+        async function generateContent() {
             const contentDiv = document.getElementById('content');
             contentDiv.innerHTML = '';  // Clear previous content
 
-            const imageFiles = fs.readdirSync(imagesDir);
-            const linkFiles = fs.readdirSync(linksDir);
-            const textFiles = fs.readdirSync(textsDir);
+            const baseDir = 'htttps://github.com/einundzwanziger/riaato.github.io/tree/main/docs/';
+            const imageDir = `${baseDir}images/`;
+            const linkDir = `${baseDir}links/`;
+            const textDir = `${baseDir}texts/`;
 
-            imageFiles.forEach((imageFile, index) => {
-                const imagePath = path.join(imagesDir, imageFile);
-                const linkPath = path.join(linksDir, linkFiles[index]);
-                const textPath = path.join(textsDir, textFiles[index]);
+            try {
+                const [imageResponse, linkResponse, textResponse] = await Promise.all([
+                    fetch(imageDir).then(res => res.json()),
+                    fetch(linkDir).then(res => res.json()),
+                    fetch(textDir).then(res => res.json())
+                ]);
 
-                const image = imagePath;
-                const link = readFileContent(linkPath).trim();
-                const text = readFileContent(textPath).trim();
-                const wordList = getMostUsedWords(text);
+                imageResponse.forEach(async (imageFile, index) => {
+                    const imageUrl = imageDir + imageFile;
+                    const linkUrl = linkDir + linkResponse[index];
+                    const textUrl = textDir + textResponse[index];
 
-                const html = `
-                    <div class="thumbnail">
-                        <img src="${image}" alt="Image ${index + 1}">
-                        <a href="${link}" class="link">View Image</a>
-                        <p class="words">10 Most Used Words: ${wordList}</p>
-                    </div>
-                `;
+                    const wordList = await fetchFileContent(textUrl);
 
-                contentDiv.innerHTML += html;
-            });
+                    const html = `
+                        <div class="thumbnail">
+                            <img src="${imageUrl}" alt="Image ${index + 1}">
+                            <a href="${linkUrl}" class="link">View Image</a>
+                            <p class="words">10 Most Used Words: ${wordList}</p>
+                        </div>
+                    `;
+
+                    contentDiv.innerHTML += html;
+                });
+            } catch (error) {
+                console.error('Error fetching image, link, or text files', error);
+            }
         }
 
         // Execute the function to generate content
