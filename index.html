@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiple Images and Words Display</title>
+    <title>Dynamic Image and Words Display</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,14 +33,23 @@
     <div id="content"></div>
 
     <script>
-        // Example arrays
-        const images = ['image1.jpg', 'image2.jpg', 'image3.jpg'];
-        const links = ['link1', 'link2', 'link3'];
-        const texts = [
-            "This is the first sample text. It contains some sample words.",
-            "Here is another text with different words to analyze.",
-            "This text also contributes to finding the most used words."
-        ];
+        const fs = require('fs');
+        const path = require('path');
+
+        // Directories for images, links, and texts
+        const imagesDir = '/Users/leartsejdiu/Documents/stuff/riaato.github.io/docs/images';
+        const linksDir = '/Users/leartsejdiu/Documents/stuff/riaato.github.io/docs/text';
+        const textsDir = '/Users/leartsejdiu/Documents/stuff/riaato.github.io/docs/link';
+
+        // Function to read file content
+        function readFileContent(filePath) {
+            try {
+                return fs.readFileSync(filePath, 'utf8');
+            } catch (error) {
+                console.error(`Error reading file: ${filePath}`, error);
+                return '';
+            }
+        }
 
         // Function to extract and display 10 most used words
         function getMostUsedWords(text) {
@@ -59,15 +68,23 @@
             return wordList.map(([word, count]) => `${word} (${count})`).join(', ');
         }
 
-        // Generate HTML for each image, link, and text
+        // Function to generate content
         function generateContent() {
             const contentDiv = document.getElementById('content');
             contentDiv.innerHTML = '';  // Clear previous content
 
-            images.forEach((image, index) => {
-                const link = links[index];
-                const text = texts[index];
+            const imageFiles = fs.readdirSync(imagesDir);
+            const linkFiles = fs.readdirSync(linksDir);
+            const textFiles = fs.readdirSync(textsDir);
 
+            imageFiles.forEach((imageFile, index) => {
+                const imagePath = path.join(imagesDir, imageFile);
+                const linkPath = path.join(linksDir, linkFiles[index]);
+                const textPath = path.join(textsDir, textFiles[index]);
+
+                const image = imagePath;
+                const link = readFileContent(linkPath).trim();
+                const text = readFileContent(textPath).trim();
                 const wordList = getMostUsedWords(text);
 
                 const html = `
@@ -82,7 +99,7 @@
             });
         }
 
-        // Generate the content dynamically
+        // Execute the function to generate content
         generateContent();
     </script>
 
