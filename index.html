@@ -1,90 +1,90 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow"> <!-- Prevents search engines from indexing -->
-    <style>
-        body {
-            font-family: 'Helvetica', sans-serif;
-            text-align: center;
-            margin-top: 50px; /* Add some space at the top for better visibility */
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiple Embedded Websites</title>
+  <style>
+    /* Common iframe container */
+    .iframe-container {
+      position: relative;
+      width: 100%;
+      margin-bottom: 20px;
+      padding-top: 56.25%; /* Aspect ratio: 16:9 */
+      background-color: #f9f9f9; /* Optional background color */
+      border: 1px solid #ccc; /* Optional border */
+    }
 
-        h1 {
-            font-size: 24px; /* Adjust the font size as needed */
-        }
+    /* Spinner styling */
+    .loading-spinner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
+      z-index: 1;
+    }
 
-        h2 {
-            font-size: 20px; /* Adjust the font size as needed */
-        }
+    .loading-spinner div {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #ccc;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
 
-        p {
-            font-size: 16px; /* Adjust the font size as needed */
-        }
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
-        .hyperlink {
-            display: block;
-            text-align: center;
-            font-size: 16px;
-            color: #ff0000;
-            text-decoration: underline;
-        }
-
-        .hyperlink2 {
-            display: block;
-            text-align: center;
-            font-size: 16px;
-            color: #0051ff;
-            text-decoration: underline;
-        }
-
-        /* Contact details styling */
-        .contact-details {
-            font-size: 12px; /* Adjust the font size for contact details */
-            color: #666; /* Grey color for contact details */
-            font-family: 'Roboto', serif; /* Use Roboto font for contact details */
-        }
-
-        .section-margin {
-            margin-bottom: 16px; /* Adjust the value to your desired margin size */
-        }
-
-    </style>
+    /* Responsive iframe */
+    .iframe-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: 2;
+    }
+  </style>
 </head>
-
 <body>
-    <img src="docs/assets/photo.jpeg" alt="telescoping" width="150">
+  <h1>Multiple Embedded Websites</h1>
 
-    <p> architect by training </p>
-    <p> writer by passion </p>
-    <p> coder by necessity </p>
+  <!-- Embedded website 1 -->
+  <div class="iframe-container">
+    <div class="loading-spinner" id="spinner-1">
+      <div></div>
+    </div>
+    <iframe src="https://hypebeast.com/2024/12/draga-aurel-todd-merrill-studio-design-miami-lucite-collection-info" loading="lazy" onload="document.getElementById('spinner-1').style.display='none';"></iframe>
+  </div>
 
-    <section class="section-margin">
-        <a href="docs/assets/LeartS_Portfolio.pdf" class="hyperlink2" target="_blank">
-            PORTFOLIO
-        </a>
-    </section>
+  <!-- Embedded website 2 -->
+  <div class="iframe-container">
+    <div class="loading-spinner" id="spinner-2">
+      <div></div>
+    </div>
+    <iframe src="https://www.20min.ch" loading="lazy" onload="document.getElementById('spinner-2').style.display='none';"></iframe>
+  </div>
 
-    <!-- <section class="section-margin">
-        <a href="docs/assets/LeartS_CV_Light.pdf" class="hyperlink" target="_blank">
-            CV
-        </a>
-    </section> -->
-    
-    <section>
-        <a href="docs/assets/LeartS_MovementAsMonument.pdf" class="hyperlink2" target="_blank">
-            MOVEMENT AS MONUMENT, ESSAY
-        </a>
-    </section>
-
-    <section>
-        <a href="https://devpost.com/software/identifizierung-von-entsieglungspotenzial" class="hyperlink2" target="_blank">
-            HACKATHON 2022
-        </a>
-    </section>
+  <!-- Embedded website 3 -->
+  <div class="iframe-container">
+    <div class="loading-spinner" id="spinner-3">
+      <div></div>
+    </div>
+    <iframe src="https://www.hochparterre.ch" loading="lazy" onload="document.getElementById('spinner-3').style.display='none';"></iframe>
+  </div>
 
 </body>
 </html>
