@@ -1,59 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webpage Screenshot</title>
-  <style>
-    body {
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f0f0f0;
-    }
-    canvas {
-      border: 1px solid #ccc;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Images and Words Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .thumbnail {
+            margin-top: 20px;
+        }
+        img {
+            width: 300px;
+            height: auto;
+        }
+        .link {
+            display: block;
+            margin: 10px 0;
+            color: blue;
+            text-decoration: none;
+        }
+        .words {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Canvas to draw screenshot -->
-  <canvas id="thumbnail"></canvas>
+    <div id="content"></div>
 
-  <script>
-    async function generateScreenshot() {
-      const canvas = document.getElementById('thumbnail');
-      const ctx = canvas.getContext('2d');
+    <script>
+        // Example arrays
+        const images = ['image1.jpg', 'image2.jpg', 'image3.jpg'];
+        const links = ['link1', 'link2', 'link3'];
+        const texts = [
+            "This is the first sample text. It contains some sample words.",
+            "Here is another text with different words to analyze.",
+            "This text also contributes to finding the most used words."
+        ];
 
-      // Set canvas dimensions to match the viewport
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+        // Function to extract and display 10 most used words
+        function getMostUsedWords(text) {
+            const wordCounts = {};
+            const words = text.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/);
 
-      // URL of the webpage you want to capture
-      const url = 'https://hypebeast.com/2024/12/nudo-volume-two-kelly-wearstler-design-miami-arca'; // Replace with your URL
+            words.forEach(word => {
+                if (word) {
+                    wordCounts[word] = (wordCounts[word] || 0) + 1;
+                }
+            });
 
-      const iframe = document.createElement('iframe');
-      iframe.src = url;
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.border = 'none';
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
+            const sortedWords = Object.entries(wordCounts).sort((a, b) => b[1] - a[1]);
 
-      iframe.onload = () => {
-        // Ensure content has fully loaded
-        iframe.contentWindow.document.body.style.backgroundColor = '#fff'; // Ensure background is fully visible
-        ctx.drawImage(iframe.contentWindow, 0, 0, canvas.width, canvas.height);
-        document.body.removeChild(iframe); // Clean up iframe
-      };
-    }
+            const wordList = sortedWords.slice(0, 10);
+            return wordList.map(([word, count]) => `${word} (${count})`).join(', ');
+        }
 
-    // Call the function after content has loaded
-    window.onload = generateScreenshot;
-  </script>
+        // Generate HTML for each image, link, and text
+        function generateContent() {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = '';  // Clear previous content
+
+            images.forEach((image, index) => {
+                const link = links[index];
+                const text = texts[index];
+
+                const wordList = getMostUsedWords(text);
+
+                const html = `
+                    <div class="thumbnail">
+                        <img src="${image}" alt="Image ${index + 1}">
+                        <a href="${link}" class="link">View Image</a>
+                        <p class="words">10 Most Used Words: ${wordList}</p>
+                    </div>
+                `;
+
+                contentDiv.innerHTML += html;
+            });
+        }
+
+        // Generate the content dynamically
+        generateContent();
+    </script>
 
 </body>
 </html>
