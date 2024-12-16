@@ -24,7 +24,7 @@
   <canvas id="thumbnail"></canvas>
 
   <script>
-    function generateScreenshot() {
+    async function generateScreenshot() {
       const canvas = document.getElementById('thumbnail');
       const ctx = canvas.getContext('2d');
 
@@ -32,8 +32,22 @@
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      // Draw the visible portion of the webpage
-      ctx.drawImage(window, 0, 0, canvas.width, canvas.height);
+      // URL of the webpage you want to capture
+      const url = 'https://hypebeast.com/2024/12/nudo-volume-two-kelly-wearstler-design-miami-arca'; // Replace with your URL
+
+      // Load the webpage into an iframe
+      const iframe = document.createElement('iframe');
+      iframe.src = url;
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+
+      iframe.onload = () => {
+        // Draw the content of the iframe onto the canvas
+        ctx.drawImage(iframe.contentWindow, 0, 0, canvas.width, canvas.height);
+        document.body.removeChild(iframe); // Clean up iframe
+      };
     }
 
     // Call the function after content has loaded
