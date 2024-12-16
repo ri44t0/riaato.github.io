@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Website Thumbnail</title>
+  <title>Webpage Screenshot</title>
   <style>
     body {
       margin: 0;
@@ -11,6 +11,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      background-color: #f0f0f0;
     }
     canvas {
       border: 1px solid #ccc;
@@ -19,30 +20,25 @@
 </head>
 <body>
 
-<canvas id="thumbnail" width="800" height="600"></canvas>
+  <!-- Canvas to draw screenshot -->
+  <canvas id="thumbnail"></canvas>
 
-<script>
-  async function generateThumbnail() {
-    const canvas = document.getElementById('thumbnail');
-    const ctx = canvas.getContext('2d');
+  <script>
+    function generateScreenshot() {
+      const canvas = document.getElementById('thumbnail');
+      const ctx = canvas.getContext('2d');
 
-    // Load the webpage into an iframe
-    const iframe = document.createElement('iframe');
-    iframe.src = 'https://hypebeast.com/2024/12/nudo-volume-two-kelly-wearstler-design-miami-arca';
-    iframe.style.width = '800px';
-    iframe.style.height = '600px';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
+      // Set canvas dimensions to match the viewport
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
-    iframe.onload = () => {
-      // Draw the content of the iframe onto the canvas
-      ctx.drawWindow(iframe.contentWindow, 0, 0, 800, 600, 'rgb(255, 255, 255)');
-      document.body.removeChild(iframe);
-    };
-  }
+      // Draw the visible portion of the webpage
+      ctx.drawImage(window, 0, 0, canvas.width, canvas.height);
+    }
 
-  generateThumbnail();
-</script>
+    // Call the function after content has loaded
+    window.onload = generateScreenshot;
+  </script>
 
 </body>
 </html>
