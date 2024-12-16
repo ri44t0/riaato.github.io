@@ -35,16 +35,17 @@
       // URL of the webpage you want to capture
       const url = 'https://hypebeast.com/2024/12/nudo-volume-two-kelly-wearstler-design-miami-arca'; // Replace with your URL
 
-      // Load the webpage into an iframe
       const iframe = document.createElement('iframe');
       iframe.src = url;
       iframe.style.width = '100%';
       iframe.style.height = '100%';
+      iframe.style.border = 'none';
       iframe.style.display = 'none';
       document.body.appendChild(iframe);
 
       iframe.onload = () => {
-        // Draw the content of the iframe onto the canvas
+        // Ensure content has fully loaded
+        iframe.contentWindow.document.body.style.backgroundColor = '#fff'; // Ensure background is fully visible
         ctx.drawImage(iframe.contentWindow, 0, 0, canvas.width, canvas.height);
         document.body.removeChild(iframe); // Clean up iframe
       };
