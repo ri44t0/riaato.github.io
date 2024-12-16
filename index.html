@@ -3,88 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Multiple Embedded Websites</title>
+  <title>Website Thumbnail</title>
   <style>
-    /* Common iframe container */
-    .iframe-container {
-      position: relative;
-      width: 100%;
-      margin-bottom: 20px;
-      padding-top: 56.25%; /* Aspect ratio: 16:9 */
-      background-color: #f9f9f9; /* Optional background color */
-      border: 1px solid #ccc; /* Optional border */
-    }
-
-    /* Spinner styling */
-    .loading-spinner {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+    body {
+      margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: white;
-      z-index: 1;
+      height: 100vh;
     }
-
-    .loading-spinner div {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #ccc;
-      border-top: 4px solid #007bff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* Responsive iframe */
-    .iframe-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-      z-index: 2;
+    canvas {
+      border: 1px solid #ccc;
     }
   </style>
 </head>
 <body>
-  <h1>Multiple Embedded Websites</h1>
 
-  <!-- Embedded website 1 -->
-  <div class="iframe-container">
-    <div class="loading-spinner" id="spinner-1">
-      <div></div>
-    </div>
-    <iframe src="https://hypebeast.com/2024/12/draga-aurel-todd-merrill-studio-design-miami-lucite-collection-info" loading="lazy" onload="document.getElementById('spinner-1').style.display='none';"></iframe>
-  </div>
+<canvas id="thumbnail" width="800" height="600"></canvas>
 
-  <!-- Embedded website 2 -->
-  <div class="iframe-container">
-    <div class="loading-spinner" id="spinner-2">
-      <div></div>
-    </div>
-    <iframe src="https://www.20min.ch" loading="lazy" onload="document.getElementById('spinner-2').style.display='none';"></iframe>
-  </div>
+<script>
+  async function generateThumbnail() {
+    const canvas = document.getElementById('thumbnail');
+    const ctx = canvas.getContext('2d');
 
-  <!-- Embedded website 3 -->
-  <div class="iframe-container">
-    <div class="loading-spinner" id="spinner-3">
-      <div></div>
-    </div>
-    <iframe src="https://www.hochparterre.ch" loading="lazy" onload="document.getElementById('spinner-3').style.display='none';"></iframe>
-  </div>
+    // Load the webpage into an iframe
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://hypebeast.com/2024/12/nudo-volume-two-kelly-wearstler-design-miami-arca;
+    iframe.style.width = '800px';
+    iframe.style.height = '600px';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    iframe.onload = () => {
+      // Draw the content of the iframe onto the canvas
+      ctx.drawWindow(iframe.contentWindow, 0, 0, 800, 600, 'rgb(255, 255, 255)');
+      document.body.removeChild(iframe);
+    };
+  }
+
+  generateThumbnail();
+</script>
 
 </body>
 </html>
